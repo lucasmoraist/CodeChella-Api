@@ -1,5 +1,7 @@
 package br.com.alura.codechella.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,13 +33,13 @@ public class Pessoa {
 
     private String setor;
 
-    private int idade;
+    private LocalDate dtNasc;
 
     public Pessoa(Request data){
         this.nome = data.nome();
         this.email = data.email();
         this.cpf = data.cpf();
         this.setor = data.setor();
-        this.idade = data.idade();
+        this.dtNasc = data.dtNasc();
     }
 }

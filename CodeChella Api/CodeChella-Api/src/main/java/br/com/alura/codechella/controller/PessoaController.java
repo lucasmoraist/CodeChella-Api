@@ -50,7 +50,7 @@ public class PessoaController {
         }
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
     @PostMapping
     public void reserva(@RequestBody Request data){
 

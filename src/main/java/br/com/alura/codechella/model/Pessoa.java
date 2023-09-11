@@ -1,25 +1,22 @@
 package br.com.alura.codechella.model;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Getter
-@Table(name = "pessoa")
 @Entity
-@EqualsAndHashCode(of = "id")
+@Builder
+@Table(name = "T_PESSOA")
 public class Pessoa { 
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +32,8 @@ public class Pessoa {
 
     private LocalDate dtNasc;
 
-    public Pessoa(Request data){
-        this.nome = data.nome();
-        this.email = data.email();
-        this.cpf = data.cpf();
-        this.setor = data.setor();
-        this.dtNasc = data.dtNasc();
+    @Override
+    public String toString(){
+        return "Pessoa [Nome: " +nome+ "\nEmail: " +email+ "\nCpf: " +cpf+ "\nSetor: " +setor+ "\nData de nascimento: " +dtNasc+ "]";
     }
 }

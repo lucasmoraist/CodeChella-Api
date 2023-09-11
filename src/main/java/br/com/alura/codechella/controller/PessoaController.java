@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,11 +33,13 @@ public class PessoaController {
     @Autowired // IoD - Injeção de dependência
     PessoaRepository pessoaRepository;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<Pessoa> index(){
         return pessoaRepository.findAll();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid Pessoa pessoa){
         log.info("cadastrando pessoa: " + pessoa);

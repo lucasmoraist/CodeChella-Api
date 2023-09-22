@@ -6,13 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alura.codechella.model.Credencial;
 import br.com.alura.codechella.model.Usuario;
 import br.com.alura.codechella.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@RestController
+@Tag(name = "auth")
 public class UsuarioController {
     @Autowired
     UsuarioRepository repository;

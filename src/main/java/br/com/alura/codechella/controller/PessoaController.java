@@ -39,7 +39,7 @@ public class PessoaController {
         return pessoaRepository.findAll();
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid Pessoa pessoa){
         log.info("cadastrando pessoa: " + pessoa);

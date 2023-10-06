@@ -59,6 +59,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.addAllowedOrigin("http://localhost:3000");
         corsConfig.addAllowedOrigin("https://web-codechella.azurewebsites.net"); // Origens permitidas
         corsConfig.addAllowedMethod("*"); // Permitir todos os métodos HTTP
         corsConfig.addAllowedHeader("*"); // Permitir todos os cabeçalhos

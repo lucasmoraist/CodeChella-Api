@@ -35,6 +35,8 @@ public class Ingresso {
 
     private String setor;
 
+    private String diaFestival;
+
     private LocalDateTime dtRegistro;
 
 

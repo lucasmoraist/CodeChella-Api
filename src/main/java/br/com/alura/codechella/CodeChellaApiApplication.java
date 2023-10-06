@@ -9,5 +9,5 @@ public class CodeChellaApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CodeChellaApiApplication.class, args);
 	}
-
+	
 }

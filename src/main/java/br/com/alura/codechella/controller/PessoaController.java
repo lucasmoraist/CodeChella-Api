@@ -1,7 +1,5 @@
 package br.com.alura.codechella.controller;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import br.com.alura.codechella.exception.RestNotFoundException;
 import br.com.alura.codechella.model.Pessoa;
 import br.com.alura.codechella.repository.PessoaRepository;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @RestController
-@Slf4j
 @RequestMapping("/api/pessoa")
 public class PessoaController {
-    List<Pessoa> pessoas = new ArrayList<>();
+    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired // IoD - Injeção de dependência
     PessoaRepository pessoaRepository;
@@ -50,34 +47,31 @@ public class PessoaController {
     @GetMapping("{id}")
     public ResponseEntity<Pessoa> show(@PathVariable Long id){
         log.info("buscando pessoa com id " + id);
-        var pessoa = pessoaRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Pessoa não encontrado"));
-        return ResponseEntity.ok(pessoa);
+        return ResponseEntity.ok(getPessoa(id));
 
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Pessoa> destroy(@PathVariable Long id){
         log.info("apagando pessoa com id " + id);
-        var pessoa = pessoaRepository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("Pessoa não encontrado"));
-
-        pessoaRepository.delete(pessoa);
-
+        pessoaRepository.delete(getPessoa(id));
         return ResponseEntity.noContent().build();
-
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Pessoa> update(@PathVariable Long id, @RequestBody @Valid Pessoa pessoa){
         log.info("alterando pessoa com id " + id);
-        pessoaRepository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("pessoa não encontrado"));
 
+        getPessoa(id);
         pessoa.setId(id);
         pessoaRepository.save(pessoa);
 
         return ResponseEntity.ok(pessoa);
 
-    }   
+    }
+
+    private Pessoa getPessoa(Long id) {
+        return pessoaRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa não encontrada"));
+    }
 }

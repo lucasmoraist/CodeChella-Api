@@ -30,14 +30,14 @@ public class Ingresso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Pessoa pessoa;
-
     private String setor;
 
     private String diaFestival;
 
     private LocalDateTime dtRegistro;
+
+    @ManyToOne
+    private Pessoa pessoa;
 
 
     public EntityModel<Ingresso> toModel(){

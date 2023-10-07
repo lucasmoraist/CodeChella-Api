@@ -40,7 +40,7 @@ import br.com.alura.codechella.repository.PessoaRepository;
 public class IngressoController {
 
     List<Ingresso> ingressos = new ArrayList<>();
-    
+
     @Autowired
     IngressoRepository ingressoRepository;
 
@@ -51,23 +51,20 @@ public class IngressoController {
     PagedResourcesAssembler<Object> assembler;
 
     @GetMapping
-    public PagedModel<EntityModel<Object>> index(@RequestParam(required = false) String setor, @PageableDefault(size = 5) Pageable pageable){
-        Page<Ingresso> ingressos = (setor == null) ?
-            ingressoRepository.findAll(pageable):
-            ingressoRepository.findBySetorContaining(setor, pageable);
-        
+    public PagedModel<EntityModel<Object>> index(@RequestParam(required = false) String setor,
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<Ingresso> ingressos = (setor == null) ? ingressoRepository.findAll(pageable)
+                : ingressoRepository.findBySetorContaining(setor, pageable);
+
         return assembler.toModel(ingressos.map(Ingresso::toModel));
     }
 
     @GetMapping("{id}")
-    @Operation(
-        summary = "Detalhes do ingresso",
-        description = "Retorna os dados de um ingresso especifico"
-    )
-    public EntityModel<Ingresso> show(@PathVariable Long id){
+    @Operation(summary = "Detalhes do ingresso", description = "Retorna os dados de um ingresso especifico")
+    public EntityModel<Ingresso> show(@PathVariable Long id) {
         log.info("buscando ingresso com id" + id);
         var ingresso = ingressoRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Ingresso não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Ingresso não encontrado"));
         return ingresso.toModel();
     }
 
@@ -81,7 +78,12 @@ public class IngressoController {
         log.info("cadastrando ingresso: " + ingresso);
         ingressoRepository.save(ingresso);
         ingresso.setDtRegistro(LocalDateTime.now());
-        ingresso.setPessoa(pessoaRepository.findById(ingresso.getPessoa().getId()).get());
+        try{
+            ingresso.setPessoa(pessoaRepository.findById(ingresso.getPessoa().getId()).get());
+        }catch(Exception e){
+            log.info("Não foi possível encontrar o id da pessoa");
+        }
+        
         
         return ResponseEntity
             .created(ingresso.toModel().getRequiredLink("self").toUri())
@@ -89,11 +91,11 @@ public class IngressoController {
     }
 
     @PutMapping("{id}")
-    public EntityModel<Ingresso> update(@PathVariable Long id, @RequestBody @Valid Ingresso ingresso){
+    public EntityModel<Ingresso> update(@PathVariable Long id, @RequestBody @Valid Ingresso ingresso) {
         log.info("alterando ingresso com id " + id);
         ingressoRepository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("ingresso não encontrado"));
-        
+                .orElseThrow(() -> new RestNotFoundException("ingresso não encontrado"));
+
         ingresso.setId(id);
         ingressoRepository.save(ingresso);
 
@@ -101,11 +103,11 @@ public class IngressoController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Ingresso> destroy(@PathVariable Long id){
-        log.info("excluindo ingresso com id "+id);
+    public ResponseEntity<Ingresso> destroy(@PathVariable Long id) {
+        log.info("excluindo ingresso com id " + id);
         var ingresso = ingressoRepository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("ingresso não encontrado"));
-        
+                .orElseThrow(() -> new RestNotFoundException("ingresso não encontrado"));
+
         ingressoRepository.delete(ingresso);
 
         return ResponseEntity.noContent().build();

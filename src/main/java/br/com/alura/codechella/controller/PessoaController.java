@@ -43,12 +43,17 @@ public class PessoaController {
         pessoaRepository.save(pessoa);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
     }
+
+    @GetMapping("busca/{cpf}")
+    public ResponseEntity<Pessoa> showCpf(@PathVariable Long cpf){
+        log.info("buscando pessoa com id " + cpf);
+        return ResponseEntity.ok(getCpf(cpf));
+    }
     
     @GetMapping("{id}")
     public ResponseEntity<Pessoa> show(@PathVariable Long id){
         log.info("buscando pessoa com id " + id);
         return ResponseEntity.ok(getPessoa(id));
-
     }
 
     @DeleteMapping("{id}")
@@ -72,6 +77,11 @@ public class PessoaController {
 
     private Pessoa getPessoa(Long id) {
         return pessoaRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa não encontrada"));
+    }
+
+    private Pessoa getCpf(Long cpf) {
+        return pessoaRepository.findByCpf(cpf)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa não encontrada"));
     }
 }
